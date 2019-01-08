@@ -12,6 +12,8 @@
 		0C428CE921E2D0A90045576E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0C428CE721E2D0A90045576E /* Main.storyboard */; };
 		0C428CEB21E2D0A90045576E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0C428CEA21E2D0A90045576E /* Assets.xcassets */; };
 		0C428CEE21E2D0A90045576E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0C428CEC21E2D0A90045576E /* LaunchScreen.storyboard */; };
+		0C428D3721E420EE0045576E /* CryptoDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C428D3621E420EE0045576E /* CryptoDataModel.swift */; };
+		C8B68B0A1DD85C51634DAEF9 /* Pods_CryptoTracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA22D023CC729EEF5387918B /* Pods_CryptoTracker.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +24,10 @@
 		0C428CEA21E2D0A90045576E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0C428CED21E2D0A90045576E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0C428CEF21E2D0A90045576E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0C428D3621E420EE0045576E /* CryptoDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoDataModel.swift; sourceTree = "<group>"; };
+		3E6480C7A594FC6CEB7A81C7 /* Pods-CryptoTracker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CryptoTracker.release.xcconfig"; path = "Pods/Target Support Files/Pods-CryptoTracker/Pods-CryptoTracker.release.xcconfig"; sourceTree = "<group>"; };
+		865112BFB5464EE804778731 /* Pods-CryptoTracker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CryptoTracker.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CryptoTracker/Pods-CryptoTracker.debug.xcconfig"; sourceTree = "<group>"; };
+		EA22D023CC729EEF5387918B /* Pods_CryptoTracker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CryptoTracker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,6 +35,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C8B68B0A1DD85C51634DAEF9 /* Pods_CryptoTracker.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,6 +47,8 @@
 			children = (
 				0C428CE221E2D0A90045576E /* CryptoTracker */,
 				0C428CE121E2D0A90045576E /* Products */,
+				44C07B88F7DA26AD147A129E /* Pods */,
+				A4EA3099616B4397A8D1A3AB /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -54,14 +63,56 @@
 		0C428CE221E2D0A90045576E /* CryptoTracker */ = {
 			isa = PBXGroup;
 			children = (
-				0C428CE321E2D0A90045576E /* AppDelegate.swift */,
-				0C428CE521E2D0A90045576E /* ViewController.swift */,
-				0C428CE721E2D0A90045576E /* Main.storyboard */,
+				0C428D3521E4206F0045576E /* Model */,
+				0C428D3321E41FD90045576E /* View  */,
+				0C428D3421E420090045576E /* Controller */,
 				0C428CEA21E2D0A90045576E /* Assets.xcassets */,
 				0C428CEC21E2D0A90045576E /* LaunchScreen.storyboard */,
 				0C428CEF21E2D0A90045576E /* Info.plist */,
 			);
 			path = CryptoTracker;
+			sourceTree = "<group>";
+		};
+		0C428D3321E41FD90045576E /* View  */ = {
+			isa = PBXGroup;
+			children = (
+				0C428CE721E2D0A90045576E /* Main.storyboard */,
+			);
+			path = "View ";
+			sourceTree = "<group>";
+		};
+		0C428D3421E420090045576E /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				0C428CE521E2D0A90045576E /* ViewController.swift */,
+				0C428CE321E2D0A90045576E /* AppDelegate.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		0C428D3521E4206F0045576E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				0C428D3621E420EE0045576E /* CryptoDataModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		44C07B88F7DA26AD147A129E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				865112BFB5464EE804778731 /* Pods-CryptoTracker.debug.xcconfig */,
+				3E6480C7A594FC6CEB7A81C7 /* Pods-CryptoTracker.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		A4EA3099616B4397A8D1A3AB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EA22D023CC729EEF5387918B /* Pods_CryptoTracker.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -71,9 +122,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0C428CF221E2D0A90045576E /* Build configuration list for PBXNativeTarget "CryptoTracker" */;
 			buildPhases = (
+				F83DDC318FD3F45CA941AC8C /* [CP] Check Pods Manifest.lock */,
 				0C428CDC21E2D0A90045576E /* Sources */,
 				0C428CDD21E2D0A90045576E /* Frameworks */,
 				0C428CDE21E2D0A90045576E /* Resources */,
+				DC3919332C81A40CEEAABED2 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -131,11 +184,53 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		DC3919332C81A40CEEAABED2 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-CryptoTracker/Pods-CryptoTracker-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CryptoTracker/Pods-CryptoTracker-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F83DDC318FD3F45CA941AC8C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-CryptoTracker-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		0C428CDC21E2D0A90045576E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C428D3721E420EE0045576E /* CryptoDataModel.swift in Sources */,
 				0C428CE621E2D0A90045576E /* ViewController.swift in Sources */,
 				0C428CE421E2D0A90045576E /* AppDelegate.swift in Sources */,
 			);
@@ -272,6 +367,7 @@
 		};
 		0C428CF321E2D0A90045576E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 865112BFB5464EE804778731 /* Pods-CryptoTracker.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -287,6 +383,7 @@
 		};
 		0C428CF421E2D0A90045576E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3E6480C7A594FC6CEB7A81C7 /* Pods-CryptoTracker.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
