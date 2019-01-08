@@ -12,11 +12,12 @@ import SwiftyJSON
 
 class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     
-    let baseURL = "https://apiv2.bitcoinaverage.com/indices/global/ticker/BTC"
+    let baseURL = "https://apiv2.bitcoinaverage.com/indices/global/ticker/"
     let currencyArray = ["AUD", "BRL","CAD","CNY","EUR","GBP","HKD","IDR","ILS","INR","JPY","MXN","NOK","NZD","PLN","RON","RUB","SEK","SGD","USD","ZAR"]
     let currencySymbol = ["$", "R$", "$", "¥", "€", "£", "$", "Rp", "₪", "₹", "¥", "$", "kr", "$", "zł", "lei", "₽", "kr", "$", "$", "R"]
     var finalURL = ""
     var currencySelected = ""
+    var URLWithSymbolName = ""
     
 
     @IBOutlet weak var cryptoName: UILabel!
@@ -36,6 +37,12 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
         
         currencyPicker.delegate = self
         currencyPicker.dataSource = self
+        
+        cryptoName.text = "Symbol"
+        cryptoPrice.text = "$0"
+        changePercentage.text = String(0)
+        volumeNb.text = "$0"
+        marketCap.text = "$0"
     }
 
     override func didReceiveMemoryWarning() {
@@ -60,13 +67,8 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
   
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 
-        finalURL = baseURL + currencyArray[row]
-        currencySelected = currencySymbol[row]
+        finalURL =  URLWithSymbolName + currencyArray[row]
         getCryptoData(url: finalURL)
-        
-    
-
-        
     }
     
     // MARK: - Network
@@ -91,8 +93,10 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
             
         }else{
             print("Error: \(response.result.error)")
+            if(UITextField.text != nil){
+                self.cryptoPrice.text = "Please Enter a Symbol."
+            }
             self.cryptoPrice.text = "Connection Issues"
-           
             
         }
     }
@@ -124,8 +128,6 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
             marketCap.text = "Unavailable"
             volumeNb.text = "Unavailable"
             changePercentage.text = "Unavailable"
-            
-            
         }
     }
 
@@ -139,16 +141,18 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
         cryptoPrice.text = "\(currencySelected)\(cryptoDataModel.cryptoPrice)"
         //marketCap.text = "\(currencySelected)\(cryptoDataModel.marketCap)"
         volumeNb.text = "\(currencySelected)\(cryptoDataModel.volume)"
-        changePercentage.text = "\(currencySelected)\(cryptoDataModel.changePercentage)"
+        changePercentage.text = "\(cryptoDataModel.changePercentage)%"
         print("Success! The UI got successfully updated!")
     }
     
     // MARK: -  Search Entered Crypto Name
     /***************************************************************/
     
-    /*func enteredCryptoName(name : String) -> String{
-        let finalURL = baseURL + name + curr_symbol
-        return finalURL
+    func enteredCryptoName(nameOfSymbol : String) -> String{
+        let URL = baseURL + nameOfSymbol
+        print("Entered in the search bar")
+        return URL
+       
     }
     
     // action of the search button pressed
@@ -156,8 +160,10 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
     @IBAction func btnPressed(_ sender: Any) {
         let entered_name = searchBar.text
         if(entered_name != nil){
-        finalURL = enteredCryptoName(name: entered_name!)
+        URLWithSymbolName = enteredCryptoName(nameOfSymbol: entered_name!)
+            //getCryptoData(url: finalURL)
+            print("Pressed the search button")
         }
-    }*/
+    }
 }
 
