@@ -13,11 +13,13 @@ import SwiftyJSON
 class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     
     let baseURL = "https://apiv2.bitcoinaverage.com/indices/global/ticker/"
+    let marketCapURL = "https://apiv2.bitcoinaverage.com/metadata"
     let currencyArray = ["AUD", "BRL","CAD","CNY","EUR","GBP","HKD","IDR","ILS","INR","JPY","MXN","NOK","NZD","PLN","RON","RUB","SEK","SGD","USD","ZAR"]
     let currencySymbol = ["$", "R$", "$", "¥", "€", "£", "$", "Rp", "₪", "₹", "¥", "$", "kr", "$", "zł", "lei", "₽", "kr", "$", "$", "R"]
     var finalURL = ""
-    var currencySelected = ""
+    var currencySelected = "$"
     var URLWithSymbolName = ""
+    var entered_name : String?
     
 
     @IBOutlet weak var cryptoName: UILabel!
@@ -66,9 +68,13 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
     }
   
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-
+        if (!(searchBar.text?.isEmpty)!){
         finalURL =  URLWithSymbolName + currencyArray[row]
+        currencySelected = currencySymbol[row]
+        getMarketCapData(url: marketCapURL)
         getCryptoData(url: finalURL)
+   
+        }
     }
     
     // MARK: - Network
@@ -87,19 +93,40 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
             // passing the JSON value into our JSON object
             let cryptoJSON : JSON = JSON (response.result.value!)
             // updating our crypto data
-            self.updateCryptoData(json: cryptoJSON )
+            self.updateCryptoData(json: cryptoJSON)
             
             
             
         }else{
             print("Error: \(response.result.error)")
-            if(UITextField.text != nil){
-                self.cryptoPrice.text = "Please Enter a Symbol."
-            }
             self.cryptoPrice.text = "Connection Issues"
             
         }
     }
+    }
+    
+    // the getMarketCapData() method
+    
+    // using AlamoFire once again for our http request -> request
+    
+    func getMarketCapData(url: String){
+        Alamofire.request(url, method: .get).responseJSON{
+            response in
+            if (response.result.isSuccess){
+                print ("Success! Got the market cap data")
+                //passing the JSON value int our JSON object
+                let mCapJSON : JSON = JSON (response.result.value!)
+                // uddapting our market cap data
+                self.updateMarketCapData(json: mCapJSON)
+            }
+            
+            else {
+                 print("Error: \(response.result.error)")
+                self.marketCap.text = "Market Cap is unreachable."
+                
+            }
+            
+        }
     }
     
     // MARK: - JSON Parsing
@@ -111,15 +138,14 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
         if let priceResult = json["averages"]["day"].double{
             cryptoDataModel.cryptoPrice = priceResult
             cryptoDataModel.changePercentage = json["changes"]["percent"]["day"].doubleValue
-            //cryptoDataModel.marketCap = json[""]
-            // rounding the Double value to a precision of 2 digits
-            let volume_nb = json ["volume"].doubleValue
+            let volume_nb = json["volume"].doubleValue
             let rounded_volume_nb = Double(round(100 * volume_nb)/100)
             cryptoDataModel.volume = rounded_volume_nb
             let symbolName =  json ["display_symbol"].stringValue
             cryptoDataModel.cryptoName = symbolName
+             print("Success! The crypto model has been updated!")
             updateUICryptoData()
-            print("Success! The crypto model has been updated!")
+           
             
         }
         else{
@@ -130,16 +156,33 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
             changePercentage.text = "Unavailable"
         }
     }
+    
 
+    func updateMarketCapData (json: JSON){
+        
+        // if {
+        print("start")
+            let marketCapResult  = json[entered_name!]["market_cap"].doubleValue
+        print(marketCapResult)
+        print("end")
+            cryptoDataModel.marketCap = marketCapResult
+         print("Success! market cap variable of the crypto model has been updated!")
+        
+        // }else{}
+    }
+    
     
     // MARK: -  UI Updates
     /***************************************************************/
 
     func updateUICryptoData (){
         
-        //cryptoName.text = cryptoDataModel.cryptoName
+        // substring the of the variable cryptoName to get the symbol only
+        var symbolInitials = cryptoDataModel.cryptoName
+        symbolInitials = String(symbolInitials.prefix(3))
+        cryptoName.text = symbolInitials
         cryptoPrice.text = "\(currencySelected)\(cryptoDataModel.cryptoPrice)"
-        //marketCap.text = "\(currencySelected)\(cryptoDataModel.marketCap)"
+        marketCap.text = "\(currencySelected)\(cryptoDataModel.marketCap)"
         volumeNb.text = "\(currencySelected)\(cryptoDataModel.volume)"
         changePercentage.text = "\(cryptoDataModel.changePercentage)%"
         print("Success! The UI got successfully updated!")
@@ -155,13 +198,15 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
        
     }
     
-    // action of the search button pressed
-    
+    // action of the search button
     @IBAction func btnPressed(_ sender: Any) {
-        let entered_name = searchBar.text
+        entered_name = searchBar.text
+        let default_currency_symbol = "USD"
         if(entered_name != nil){
         URLWithSymbolName = enteredCryptoName(nameOfSymbol: entered_name!)
-            //getCryptoData(url: finalURL)
+            getMarketCapData(url: marketCapURL)
+            getCryptoData(url: URLWithSymbolName+default_currency_symbol)
+            
             print("Pressed the search button")
         }
     }
