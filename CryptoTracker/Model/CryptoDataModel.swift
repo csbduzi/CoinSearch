@@ -13,8 +13,8 @@ class CryptoDataModel{
     // properties of the model
     var cryptoName : String = ""
     var cryptoPrice : Double = 0.0
-    var marketCap : Double = 0.0
-    var volume: Double = 0.0
+    var marketCap : Int = 0
+    var volume: Int = 0
     var changePercentage : Double = 0.0
     
 }

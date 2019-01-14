@@ -17,9 +17,14 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
     let currencyArray = ["AUD", "BRL","CAD","CNY","EUR","GBP","HKD","IDR","ILS","INR","JPY","MXN","NOK","NZD","PLN","RON","RUB","SEK","SGD","USD","ZAR"]
     let currencySymbol = ["$", "R$", "$", "¥", "€", "£", "$", "Rp", "₪", "₹", "¥", "$", "kr", "$", "zł", "lei", "₽", "kr", "$", "$", "R"]
     var finalURL = ""
-    var currencySelected = "$"
+    var currencySelected = ""
     var URLWithSymbolName = ""
+    var pickedCurrency : String?
     var entered_name : String?
+    let numberFormat = NumberFormatter()
+    
+
+    
     
 
     @IBOutlet weak var cryptoName: UILabel!
@@ -29,6 +34,7 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
     @IBOutlet weak var marketCap: UILabel!
     @IBOutlet weak var searchBar: UITextField!
     @IBOutlet weak var currencyPicker: UIPickerView!
+    @IBOutlet weak var searchButton: UIButton!
     
     let cryptoDataModel  = CryptoDataModel()
     
@@ -40,11 +46,17 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
         currencyPicker.delegate = self
         currencyPicker.dataSource = self
         
-        cryptoName.text = "Symbol"
+        cryptoName.text = "Coin Symbol"
         cryptoPrice.text = "$0"
-        changePercentage.text = String(0)
+        changePercentage.text = "0%"
         volumeNb.text = "$0"
         marketCap.text = "$0"
+        
+        searchButton.layer.cornerRadius = 5
+        
+        pickedCurrency = "AUD"
+        currencySelected = "$"
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -64,6 +76,7 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
     
     // number of title for the rows
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        pickedCurrency = currencyArray[row]
         return currencyArray[row]
     }
   
@@ -75,6 +88,20 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
         getCryptoData(url: finalURL)
    
         }
+    }
+   
+    // attributes for the rows
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+        var pickerLabel: UILabel? = (view as? UILabel)
+        if pickerLabel == nil {
+            pickerLabel = UILabel()
+            pickerLabel?.font = UIFont(name: "Avenir Medium", size: 17)
+            pickerLabel?.textAlignment = .center
+        }
+        pickerLabel?.text = currencyArray[row]
+        pickerLabel?.textColor = UIColor.white
+        
+        return pickerLabel!
     }
     
     // MARK: - Network
@@ -98,8 +125,8 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
             
             
         }else{
-            print("Error: \(response.result.error)")
-            self.cryptoPrice.text = "Connection Issues"
+            print("Error: \(String(describing: response.result.error))")
+            self.cryptoPrice.text = "Oops! Try Again."
             
         }
     }
@@ -121,7 +148,7 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
             }
             
             else {
-                 print("Error: \(response.result.error)")
+                print("Error: \(String(describing: response.result.error))")
                 self.marketCap.text = "Market Cap is unreachable."
                 
             }
@@ -138,9 +165,7 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
         if let priceResult = json["averages"]["day"].double{
             cryptoDataModel.cryptoPrice = priceResult
             cryptoDataModel.changePercentage = json["changes"]["percent"]["day"].doubleValue
-            let volume_nb = json["volume"].doubleValue
-            let rounded_volume_nb = Double(round(100 * volume_nb)/100)
-            cryptoDataModel.volume = rounded_volume_nb
+            cryptoDataModel.volume = json["volume"].intValue
             let symbolName =  json ["display_symbol"].stringValue
             cryptoDataModel.cryptoName = symbolName
              print("Success! The crypto model has been updated!")
@@ -161,10 +186,7 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
     func updateMarketCapData (json: JSON){
         
         // if {
-        print("start")
-            let marketCapResult  = json[entered_name!]["market_cap"].doubleValue
-        print(marketCapResult)
-        print("end")
+        let marketCapResult  = json[entered_name!]["market_cap"].intValue
             cryptoDataModel.marketCap = marketCapResult
          print("Success! market cap variable of the crypto model has been updated!")
         
@@ -177,13 +199,20 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
 
     func updateUICryptoData (){
         
+        // number formatrer
+        numberFormat.usesGroupingSeparator = true
+        numberFormat.numberStyle = .decimal
+        
         // substring the of the variable cryptoName to get the symbol only
         var symbolInitials = cryptoDataModel.cryptoName
         symbolInitials = String(symbolInitials.prefix(3))
         cryptoName.text = symbolInitials
-        cryptoPrice.text = "\(currencySelected)\(cryptoDataModel.cryptoPrice)"
-        marketCap.text = "\(currencySelected)\(cryptoDataModel.marketCap)"
-        volumeNb.text = "\(currencySelected)\(cryptoDataModel.volume)"
+        let formatted_price = numberFormat.string(from: cryptoDataModel.cryptoPrice as NSNumber)!
+        cryptoPrice.text = "\(currencySelected)\(formatted_price)"
+        let formatted_marketCap = numberFormat.string(from: cryptoDataModel.marketCap as NSNumber)!
+        marketCap.text = "\(currencySelected)\(formatted_marketCap)"
+        let formatted_volumeNb = numberFormat.string(from: cryptoDataModel.volume as NSNumber)!
+        volumeNb.text = "\(currencySelected)\(formatted_volumeNb)"
         changePercentage.text = "\(cryptoDataModel.changePercentage)%"
         print("Success! The UI got successfully updated!")
     }
@@ -201,11 +230,11 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
     // action of the search button
     @IBAction func btnPressed(_ sender: Any) {
         entered_name = searchBar.text
-        let default_currency_symbol = "USD"
         if(entered_name != nil){
         URLWithSymbolName = enteredCryptoName(nameOfSymbol: entered_name!)
             getMarketCapData(url: marketCapURL)
-            getCryptoData(url: URLWithSymbolName+default_currency_symbol)
+            getCryptoData(url: URLWithSymbolName+pickedCurrency!)
+            print(pickedCurrency)
             
             print("Pressed the search button")
         }
